@@ -1,4 +1,5 @@
 import { useState } from "react";
+import PrimaryNotationBar from "../components/primaryBar";
 
 export default function CanvasArea() {
   const [title, setTitle] = useState("");
@@ -71,6 +72,7 @@ export default function CanvasArea() {
               value={numerator}
               onChange={handleNumeratorChange}
               onKeyDown={handleKeyDown}
+              min={2}
               autoFocus
             />
           ) : (
@@ -91,6 +93,7 @@ export default function CanvasArea() {
               value={denominator}
               onChange={handleDenominatorChange}
               onKeyDown={handleKeyDown}
+              min={2}
               autoFocus
             />
           ) : (
@@ -108,9 +111,15 @@ export default function CanvasArea() {
             type="number"
             className="border border-gray-400 rounded p-2 text-lg focus:outline-none focus:border-blue-500 w-24 text-center mr-10"
             value={tempo}
+            min={10}
+            max={200}
             onChange={handleTempoChange}
           />
         </div>
+      </div>
+      {/* ---------------notation bar------------- */}
+      <div className="mt-10 ml-12">
+        <PrimaryNotationBar numerator={numerator} denominator={denominator} />
       </div>
     </div>
   );
