@@ -61,6 +61,10 @@ export default function CanvasArea() {
     }
   };
 
+  const handleDeleteBar = () => {
+    setBars((prevBars) => prevBars.slice(0, -1));
+  };
+
   const isNewLine = (index) => {
     if (index === 0) return false; // First bar never has a leading |
 
@@ -179,7 +183,7 @@ export default function CanvasArea() {
               >
                 <span
                   className={`text-lg font-bold ${
-                    isNewLine(index) ? "mr-6" : "mr-2"
+                    isNewLine(index) ? "ml-2 mr-5" : "mr-2"
                   }`}
                 >
                   {isNewLine(index) ? "|" : ""}
@@ -195,8 +199,17 @@ export default function CanvasArea() {
           })}
 
           {/* + Button */}
-          <div className="relative group">
-            <button className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg font-bold hover:bg-blue-600">
+          <div className="relative group flex flex-col items-center gap-2">
+            {/* Delete button */}
+            <button
+              onClick={handleDeleteBar} // <-- Your delete logic here
+              className="w-5 h-5 rounded-full bg-red-500 text-white flex items-center justify-center text-lg font-bold hover:bg-red-600"
+            >
+              -
+            </button>
+
+            {/* Add button */}
+            <button className="w-5 h-5 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg font-bold hover:bg-blue-600">
               +
             </button>
 
