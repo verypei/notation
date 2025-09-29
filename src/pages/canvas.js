@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PrimaryNotationBar from "../components/primaryBar";
+import SecondaryNotationBar from "../components/secondaryBar";
+import CustomNotationBar from "../components/customBar";
 
 export default function CanvasArea() {
+  // ------------------ Use State ------------------
+
   const [title, setTitle] = useState("");
   const [isTitleEditing, setisEditingTitle] = useState(true);
 
@@ -12,6 +16,15 @@ export default function CanvasArea() {
   const [isEditingDenominator, setIsEditingDenominator] = useState(true);
 
   const [tempo, setTempo] = useState(90);
+
+  const [bars, setBars] = useState([]);
+
+  const [positions, setPositions] = useState([]);
+
+  // ------------------ Use Ref ------------------
+
+  const containerRef = useRef(null);
+  const barRefs = useRef([]);
 
   // ------------------ Handlers ------------------
   const handleTitleChange = (e) => setTitle(e.target.value);
@@ -34,6 +47,36 @@ export default function CanvasArea() {
   const handleDenominatorClick = () => setIsEditingDenominator(true);
 
   const handleTempoChange = (e) => setTempo(Number(e.target.value));
+
+  const handleAddBar = (type) => {
+    if (type === "custom") {
+      const customNum = prompt("Enter custom numerator:", numerator);
+      if (!customNum || isNaN(customNum) || customNum <= 0) return;
+      setBars([
+        ...bars,
+        { type: "custom", numerator: parseInt(customNum, 10) },
+      ]);
+    } else {
+      setBars([...bars, { type: "secondary" }]);
+    }
+  };
+
+  const isNewLine = (index) => {
+    if (index === 0) return false; // First bar never has a leading |
+
+    const currentTop = barRefs.current[index]?.offsetTop;
+    const prevTop = barRefs.current[index - 1]?.offsetTop;
+
+    return currentTop !== prevTop; // New line detected if Y position changes
+  };
+
+  // ------------------ Use Effect ------------------
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const children = containerRef.current.querySelectorAll(".bar-item");
+    const newPositions = Array.from(children).map((el) => el.offsetTop);
+    setPositions(newPositions);
+  }, [bars]);
 
   return (
     <div className="w-full h-full bg-white rounded-lg shadow-inner p-6">
@@ -118,8 +161,58 @@ export default function CanvasArea() {
         </div>
       </div>
       {/* ---------------notation bar------------- */}
-      <div className="mt-10 ml-12">
-        <PrimaryNotationBar numerator={numerator} denominator={denominator} />
+      <div className="w-full h-full bg-white rounded-lg shadow-inner p-6">
+        <div
+          ref={containerRef}
+          className="flex flex-wrap items-center gap-x-8 gap-y-6"
+        >
+          {/* Fixed primary bar at the very start */}
+          <PrimaryNotationBar numerator={numerator} denominator={denominator} />
+
+          {/* Render all dynamic bars */}
+          {bars.map((bar, index) => {
+            return (
+              <div
+                key={index}
+                ref={(el) => (barRefs.current[index] = el)} // Track position
+                className="bar-item flex items-center"
+              >
+                <span className="text-lg font-bold mr-1">
+                  {isNewLine(index) ? "|" : ""}
+                </span>
+
+                {bar.type === "secondary" ? (
+                  <SecondaryNotationBar numerator={numerator} />
+                ) : (
+                  <CustomNotationBar numerator={bar.numerator} />
+                )}
+              </div>
+            );
+          })}
+
+          {/* + Button */}
+          <div className="relative group">
+            <button className="w-10 h-10 rounded-full bg-blue-500 text-white flex items-center justify-center text-lg font-bold hover:bg-blue-600">
+              +
+            </button>
+
+            {/* Dropdown menu */}
+            <div className="absolute top-12 left-0 bg-white border rounded shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+              <button
+                onClick={() => handleAddBar("secondary")}
+                className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+              >
+                Add Secondary
+              </button>
+              <button
+                onClick={() => handleAddBar("custom")}
+                className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+              >
+                Add Custom
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
