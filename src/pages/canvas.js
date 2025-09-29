@@ -61,6 +61,18 @@ export default function CanvasArea() {
     }
   };
 
+  const handleAddRepeatBarBefore = () => {
+    if (bars.length === 0) return; // nothing to repeat
+
+    const lastBar = { ...bars[bars.length - 1] }; // clone the object
+    const newBars = [
+      ...bars.slice(0, bars.length - 1),
+      lastBar,
+      bars[bars.length - 1],
+    ];
+    setBars(newBars);
+  };
+
   const handleDeleteBar = () => {
     if (bars.length > 0) {
       setBars((prevBars) => prevBars.slice(0, -1));
@@ -231,6 +243,12 @@ export default function CanvasArea() {
                 className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
               >
                 Add Custom
+              </button>
+              <button
+                onClick={() => handleAddRepeatBarBefore()}
+                className="block w-full px-4 py-2 text-sm hover:bg-gray-100"
+              >
+                repeat before
               </button>
             </div>
           </div>
