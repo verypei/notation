@@ -192,7 +192,7 @@ export default function CanvasArea() {
                 {bar.type === "secondary" ? (
                   <SecondaryNotationBar numerator={numerator} />
                 ) : (
-                  <CustomNotationBar numerator={bar.numerator} />
+                  <CustomNotationBar numerator={bar.numerator} denominator={denominator} />
                 )}
               </div>
             );
