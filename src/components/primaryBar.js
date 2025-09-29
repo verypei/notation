@@ -20,7 +20,7 @@ export default function PrimaryNotationBar({ numerator, denominator }) {
       </div>
 
       {/* End Bar Line */}
-      <span className="text-lg font-bold ml-4 -mr-3">|</span>
+      <span className="text-lg font-bold ml-4 -mr-4">|</span>
     </div>
   );
 }

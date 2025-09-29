@@ -67,7 +67,7 @@ export default function CanvasArea() {
     const currentTop = barRefs.current[index]?.offsetTop;
     const prevTop = barRefs.current[index - 1]?.offsetTop;
 
-    return currentTop !== prevTop; // New line detected if Y position changes
+    return currentTop !== prevTop;
   };
 
   // ------------------ Use Effect ------------------
@@ -177,7 +177,11 @@ export default function CanvasArea() {
                 ref={(el) => (barRefs.current[index] = el)} // Track position
                 className="bar-item flex items-center"
               >
-                <span className="text-lg font-bold mr-1">
+                <span
+                  className={`text-lg font-bold ${
+                    isNewLine(index) ? "mr-6" : "mr-2"
+                  }`}
+                >
                   {isNewLine(index) ? "|" : ""}
                 </span>
 

@@ -16,7 +16,7 @@ export default function CustomNotationBar({ numerator, denominator }) {
       </div>
 
       {/* End Bar Line */}
-      <span className="text-lg font-bold ml-1">|</span>
+      <span className="text-lg font-bold ml-1 -mr-4">|</span>
     </div>
   );
 }
