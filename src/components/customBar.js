@@ -10,7 +10,7 @@ export default function CustomNotationBar({ numerator, denominator }) {
       <div className="flex mx-1 gap-4">
         {Array.from({ length: numerator }).map((_, index) => (
           <span key={index} className="text-lg">
-            •
+            • 
           </span>
         ))}
       </div>

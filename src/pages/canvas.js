@@ -62,16 +62,18 @@ export default function CanvasArea() {
   };
 
   const handleDeleteBar = () => {
-    setBars((prevBars) => prevBars.slice(0, -1));
+    if (bars.length > 0) {
+      setBars((prevBars) => prevBars.slice(0, -1));
+    }
   };
 
   const isNewLine = (index) => {
-    if (index === 0) return false; // First bar never has a leading |
+    if (index === 0) return false;
 
-    const currentTop = barRefs.current[index]?.offsetTop;
-    const prevTop = barRefs.current[index - 1]?.offsetTop;
+    const currentTop = barRefs.current[index]?.offsetTop || 0;
+    const prevTop = barRefs.current[index - 1]?.offsetTop || 0;
 
-    return currentTop !== prevTop;
+    return Math.abs(currentTop - prevTop) > 2;
   };
 
   // ------------------ Use Effect ------------------
@@ -179,7 +181,7 @@ export default function CanvasArea() {
               <div
                 key={index}
                 ref={(el) => (barRefs.current[index] = el)} // Track position
-                className="bar-item flex items-center"
+                className="bar-item flex items-center min-h-[80px]"
               >
                 <span
                   className={`text-lg font-bold ${
@@ -192,7 +194,10 @@ export default function CanvasArea() {
                 {bar.type === "secondary" ? (
                   <SecondaryNotationBar numerator={numerator} />
                 ) : (
-                  <CustomNotationBar numerator={bar.numerator} denominator={denominator} />
+                  <CustomNotationBar
+                    numerator={bar.numerator}
+                    denominator={denominator}
+                  />
                 )}
               </div>
             );
