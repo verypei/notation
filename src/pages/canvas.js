@@ -17,7 +17,14 @@ export default function CanvasArea() {
 
   const [tempo, setTempo] = useState(90);
 
-  const [bars, setBars] = useState([]);
+  const [bars, setBars] = useState([
+    {
+      type: "primary",
+      repeat: false,
+      numerator: numerator,
+      denominator: denominator,
+    },
+  ]);
 
   const [positions, setPositions] = useState([]);
 
@@ -32,17 +39,39 @@ export default function CanvasArea() {
     if (e.key === "Enter") {
       setisEditingTitle(false);
       setIsEditingNumerator(false);
+      setIsEditingDenominator(false);
     }
   };
+
   const handleTitleClick = () => setisEditingTitle(true);
 
   const handleNumeratorChange = (e) => {
-    setNumerator(+e.target.value);
+    const newNum = +e.target.value;
+    setNumerator(newNum);
+
+    if (bars.length === 1) {
+      setBars([
+        {
+          ...bars[0],
+          numerator: newNum,
+        },
+      ]);
+    }
   };
   const handleNumeratorClick = () => setIsEditingNumerator(true);
 
   const handleDenominatorChange = (e) => {
-    setDenominator(+e.target.value);
+    const newDeno = e.target.value;
+    setDenominator(newDeno);
+
+    if (bars.length === 1) {
+      setBars([
+        {
+          ...bars[0],
+          denominator: newDeno,
+        },
+      ]);
+    }
   };
   const handleDenominatorClick = () => setIsEditingDenominator(true);
 
@@ -54,21 +83,28 @@ export default function CanvasArea() {
       if (!customNum || isNaN(customNum) || customNum <= 0) return;
       setBars([
         ...bars,
-        { type: "custom", numerator: parseInt(customNum, 10) },
+        { type: "custom", numerator: parseInt(customNum, 10), repeat: false },
       ]);
     } else {
+      const lastBar = bars[bars.length - 1];
+      if (lastBar.type === "custom") {
+        setBars([...bars, { type: "secondary" }]);
+      }
       setBars([...bars, { type: "secondary" }]);
     }
   };
 
   const handleAddRepeatBarBefore = () => {
     if (bars.length === 0) return; // nothing to repeat
-
     const lastBar = { ...bars[bars.length - 1] }; // clone the object
+    if (lastBar.type === "custom") {
+      lastBar["repeat"] = true;
+    }
+
     const newBars = [
       ...bars.slice(0, bars.length - 1),
-      lastBar,
-      bars[bars.length - 1],
+      bars[bars.length - 1], // original last bar first
+      lastBar, // repeat bar after
     ];
     setBars(newBars);
   };
@@ -140,6 +176,8 @@ export default function CanvasArea() {
             <span
               className="inline-block text-lg font-semibold cursor-pointer border-b-2 border-gray-400 px-1 w-10 text-center"
               onClick={handleNumeratorClick}
+              onKeyDown={handleKeyDown}
+              min={2}
             >
               {numerator}
             </span>
@@ -185,14 +223,13 @@ export default function CanvasArea() {
           className="flex flex-wrap items-center gap-x-8 gap-y-6"
         >
           {/* Fixed primary bar at the very start */}
-          <PrimaryNotationBar numerator={numerator} denominator={denominator} />
+          {/* <PrimaryNotationBar numerator={numerator} denominator={denominator} /> */}
 
           {/* Render all dynamic bars */}
           {bars.map((bar, index) => {
             return (
               <div
                 key={index}
-                ref={(el) => (barRefs.current[index] = el)} // Track position
                 className="bar-item flex items-center min-h-[80px]"
               >
                 <span
@@ -203,12 +240,20 @@ export default function CanvasArea() {
                   {isNewLine(index) ? "|" : ""}
                 </span>
 
-                {bar.type === "secondary" ? (
+                {bar.type === "primary" && (
+                  <PrimaryNotationBar
+                    numerator={bar.numerator}
+                    denominator={bar.denominator}
+                  />
+                )}
+                {bar.type === "secondary" && (
                   <SecondaryNotationBar numerator={numerator} />
-                ) : (
+                )}
+                {bar.type === "custom" && (
                   <CustomNotationBar
                     numerator={bar.numerator}
                     denominator={denominator}
+                    repeat={bar.repeat}
                   />
                 )}
               </div>

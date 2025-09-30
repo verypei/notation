@@ -11,7 +11,8 @@ export default function PrimaryNotationBar({ numerator, denominator }) {
       </div>
 
       {/* Dots based on numerator */}
-      <div className="flex justify-between w-24 gap-2">
+      <div className="flex justify-between"
+      style={{ width: `${numerator * 24}px` }}>
         {Array.from({ length: numerator }).map((_, index) => (
           <span key={index} className="text-lg">
             •
