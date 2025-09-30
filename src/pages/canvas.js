@@ -86,11 +86,29 @@ export default function CanvasArea() {
         { type: "custom", numerator: parseInt(customNum, 10), repeat: false },
       ]);
     } else {
+      //----type secondary----
       const lastBar = bars[bars.length - 1];
       if (lastBar.type === "custom") {
-        setBars([...bars, { type: "secondary" }]);
+        setBars([
+          ...bars,
+          {
+            type: "primary",
+            numerator,
+            denominator,
+            repeat: true,
+          },
+        ]);
+      } else {
+        setBars([
+          ...bars,
+          {
+            type: "secondary",
+            numerator,
+            denominator,
+            repeat: false,
+          },
+        ]);
       }
-      setBars([...bars, { type: "secondary" }]);
     }
   };
 
@@ -223,8 +241,6 @@ export default function CanvasArea() {
           className="flex flex-wrap items-center gap-x-8 gap-y-6"
         >
           {/* Fixed primary bar at the very start */}
-          {/* <PrimaryNotationBar numerator={numerator} denominator={denominator} /> */}
-
           {/* Render all dynamic bars */}
           {bars.map((bar, index) => {
             return (
@@ -244,6 +260,7 @@ export default function CanvasArea() {
                   <PrimaryNotationBar
                     numerator={bar.numerator}
                     denominator={bar.denominator}
+                    repeat={bar.repeat}
                   />
                 )}
                 {bar.type === "secondary" && (
