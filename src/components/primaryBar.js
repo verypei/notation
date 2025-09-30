@@ -11,7 +11,7 @@ export default function PrimaryNotationBar({ numerator, denominator, repeat }) {
       )}
 
       {/* Time Signature stacked vertically */}
-      <div className="flex flex-col items-center mr-3 leading-[0.7]">
+      <div className="flex flex-col items-center mr-4 leading-[0.7]">
         <span className="text-sm font-bold">{numerator}</span>
         <span className="text-sm font-bold">{denominator}</span>
       </div>

@@ -246,11 +246,12 @@ export default function CanvasArea() {
             return (
               <div
                 key={index}
+                ref={(el) => (barRefs.current[index] = el)}
                 className="bar-item flex items-center min-h-[80px]"
               >
                 <span
                   className={`text-lg font-bold ${
-                    isNewLine(index) ? "ml-2 mr-5" : "mr-2"
+                    isNewLine(index) ? "ml-4 mr-5" : "mr-2"
                   }`}
                 >
                   {isNewLine(index) ? "|" : ""}
