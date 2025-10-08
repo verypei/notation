@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Stage, Layer, Rect, Text } from "react-konva";
 import CanvasTitle from "../components/title";
+import CanvasTimeSignature from "../components/timeSignature";
 
 export default function A4Canvas({
   dpi = 96,
@@ -8,6 +9,8 @@ export default function A4Canvas({
   fit = true,
 }) {
   const [title, setTitle] = useState("");
+  const [numerator, setNumerator] = useState("4");
+  const [denominator, setDenominator] = useState("4");
 
   const A4_WIDTH_MM = 210;
   const A4_HEIGHT_MM = 297;
@@ -75,6 +78,14 @@ export default function A4Canvas({
       <CanvasTitle
         title={title}
         setTitle={setTitle}
+        stageScale={stageScale}
+        stageSize={stageSize}
+      />
+      <CanvasTimeSignature
+        numerator={numerator}
+        setNumerator={setNumerator}
+        denominator={denominator}
+        setDenominator={setDenominator}
         stageScale={stageScale}
         stageSize={stageSize}
       />

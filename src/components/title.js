@@ -26,7 +26,7 @@ export default function CanvasTitle({
         top: `${40 * stageScale}px`,
         left: "50%",
         transform: "translateX(-50%)",
-        width: `${stageSize.width * stageScale * 0.8}px`,
+        width: `${stageSize.width * stageScale * 0.3}px`,
         textAlign: "center",
         zIndex: 10,
       }}
@@ -38,10 +38,10 @@ export default function CanvasTitle({
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="Enter Title"
+          placeholder="Title"
           autoFocus
           style={{
-            width: "100%",
+            width: "50%",
             fontSize: `${24 * stageScale}px`,
             textAlign: "center",
             border: "none",
