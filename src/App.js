@@ -1,6 +1,6 @@
 import "./App.css";
 import Sidebar from "./components/sidebar";
-import CanvasArea from "./pages/canvas";
+import CanvasArea from "./pages/canvas_konva";
 
 function App() {
   return (

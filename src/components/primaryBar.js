@@ -1,25 +1,35 @@
-export default function PrimaryNotationBar({ numerator, denominator, repeat }) {
-  console.log("masuk ke primary---", numerator, denominator, "==--->", repeat);
-
+export default function PrimaryNotationBar({
+  numerator,
+  denominator,
+  repeat,
+  numDisplay,
+}) {
   return (
     <div className="flex items-center">
-      {/* Start Bar Line */}
-      {!repeat ? (
-        <span className="text-lg font-bold mr-3">||</span>
-      ) : (
+      {!repeat && numDisplay && (
+        <span className="text-lg font-bold mr-2 ml-2">||</span>
+      )}
+      {repeat && numDisplay && (
         <span className="text-lg font-bold -mr-2"></span>
       )}
 
-      {/* Time Signature stacked vertically */}
-      <div className="flex flex-col items-center mr-4 leading-[0.7]">
-        <span className="text-sm font-bold">{numerator}</span>
-        <span className="text-sm font-bold">{denominator}</span>
-      </div>
-
+      {numDisplay && (
+        <div className="flex flex-col items-center leading-[0.7]">
+          <span className="text-sm font-bold">{numerator}</span>
+          <span className="text-sm font-bold">{denominator}</span>
+        </div>
+      )}
+      {
+        <div className="flex flex-col items-center mr-2 ml-1 leading-[0.7]"></div>
+      }
       {/* Dots based on numerator */}
       <div
         className="flex justify-between"
-        style={{ width: `${numerator * 24}px` }}
+        style={{
+          width: `${numerator * 24}px`,
+          marginRight: numDisplay ? "8px" : "16px",
+          marginLeft: numDisplay ? "0px" : "8px",
+        }}
       >
         {Array.from({ length: numerator }).map((_, index) => (
           <span key={index} className="text-lg">
@@ -29,7 +39,7 @@ export default function PrimaryNotationBar({ numerator, denominator, repeat }) {
       </div>
 
       {/* End Bar Line */}
-      <span className="text-lg font-bold ml-3 -mr-6">|</span>
+      <span className="text-lg font-bold ml-3 -mr-9">|</span>
     </div>
   );
 }

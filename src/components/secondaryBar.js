@@ -2,7 +2,7 @@ export default function SecondaryNotationBar({ numerator }) {
   return (
     <div className="flex items-center">
       {/* Dots + Bar Lines */}
-      <div className="flex items-center space-x-3 gap-2 -mr-4">
+      <div className="flex items-center space-x-3 gap-2 -mr-5">
         {/* Start Bar Line */}
 
         {/* Dots */}

@@ -1,4 +1,9 @@
-export default function CustomNotationBar({ numerator, denominator, repeat }) {
+export default function CustomNotationBar({
+  numerator,
+  denominator,
+  repeat,
+  sameBefore,
+}) {
   return (
     <div className="flex items-center">
       {/* Start Bar Line */}
