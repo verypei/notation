@@ -2,15 +2,20 @@ import React, { useRef, useEffect, useState } from "react";
 import { Stage, Layer, Rect, Text } from "react-konva";
 import CanvasTitle from "../components/title";
 import CanvasTimeSignature from "../components/timeSignature";
+import KeyNoteSelector from "../components/keyNote";
+import TempoInput from "../components/tempoInput";
 
 export default function A4Canvas({
   dpi = 96,
   orientation = "portrait",
   fit = true,
 }) {
+  // State untuk judul, tanda birama, tempo, dan nada dasar----------------
   const [title, setTitle] = useState("");
   const [numerator, setNumerator] = useState("4");
   const [denominator, setDenominator] = useState("4");
+  const [tempo, setTempo] = useState("");
+  const [tonic, setTonic] = useState("");
 
   const A4_WIDTH_MM = 210;
   const A4_HEIGHT_MM = 297;
@@ -89,6 +94,12 @@ export default function A4Canvas({
         stageScale={stageScale}
         stageSize={stageSize}
       />
+      <KeyNoteSelector
+        stageScale={stageScale}
+        tonic={tonic}
+        setTonic={setTonic}
+      />
+      <TempoInput stageScale={stageScale} tempo={tempo} setTempo={setTempo} />
 
       {/* Canvas paper */}
       <div
