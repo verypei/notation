@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useState } from "react";
-import { Stage, Layer, Rect, Text } from "react-konva";
+import { useRef, useEffect, useState } from "react";
+import { Stage, Layer, Rect } from "react-konva";
 import CanvasTitle from "../components/title";
 import CanvasTimeSignature from "../components/timeSignature";
 import KeyNoteSelector from "../components/keyNote";
 import TempoInput from "../components/tempoInput";
+import PrimaryBar from "../components/primaryBar";
 
 export default function A4Canvas({
   dpi = 96,
@@ -126,6 +127,12 @@ export default function A4Canvas({
               fill="#ffffff"
               stroke="#d1d5db"
               strokeWidth={1.5}
+            />
+            <PrimaryBar
+              x={50}
+              y={200}
+              numerator={numerator}
+              denominator={denominator}
             />
           </Layer>
         </Stage>

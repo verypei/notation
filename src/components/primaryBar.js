@@ -1,45 +1,87 @@
-export default function PrimaryNotationBar({
-  numerator,
-  denominator,
-  repeat,
-  numDisplay,
+import { useEffect, useState } from "react";
+import { Group, Line, Text, Circle } from "react-konva";
+
+export default function PrimaryBar({
+  x = 50,
+  y = 200,
+  numerator = 4,
+  denominator = 4,
+  spacing = 40,
+  marginRight = 50,
 }) {
+  const dotSpacing = 40; // jarak antar titik
+  const lineHeight = 30; // tinggi bar
+  const barStartX = x;
+
+  const [barConfig, setBarConfig] = useState({
+    startX: x,
+    endX: x + numerator * spacing + marginRight,
+    dots: [],
+  });
+
+  const barEndX = x + numerator * dotSpacing + 50;
+
+  useEffect(() => {
+    // Recalculate bar when numerator or denominator change
+    const startX = x;
+    const endX = x + numerator * spacing + marginRight;
+    const dots = Array.from({ length: numerator }).map((_, i) => ({
+      x: startX + 60 + i * spacing,
+      y: y,
+    }));
+
+    setBarConfig({ startX, endX, dots });
+  }, [numerator, denominator, x, y, spacing, marginRight]);
+
   return (
-    <div className="flex items-center">
-      {!repeat && numDisplay && (
-        <span className="text-lg font-bold mr-2 ml-2">||</span>
-      )}
-      {repeat && numDisplay && (
-        <span className="text-lg font-bold -mr-2"></span>
-      )}
+    <Group x={0} y={0}>
+      {/* Double Bar Start || */}
+      <Line
+        points={[barStartX, y - lineHeight / 2, barStartX, y + lineHeight / 2]}
+        stroke="black"
+        strokeWidth={2}
+      />
+      <Line
+        points={[
+          barStartX + 6,
+          y - lineHeight / 2,
+          barStartX + 6,
+          y + lineHeight / 2,
+        ]}
+        stroke="black"
+        strokeWidth={2}
+      />
 
-      {numDisplay && (
-        <div className="flex flex-col items-center leading-[0.7]">
-          <span className="text-sm font-bold">{numerator}</span>
-          <span className="text-sm font-bold">{denominator}</span>
-        </div>
-      )}
-      {
-        <div className="flex flex-col items-center mr-2 ml-1 leading-[0.7]"></div>
-      }
-      {/* Dots based on numerator */}
-      <div
-        className="flex justify-between"
-        style={{
-          width: `${numerator * 24}px`,
-          marginRight: numDisplay ? "8px" : "16px",
-          marginLeft: numDisplay ? "0px" : "8px",
-        }}
-      >
-        {Array.from({ length: numerator }).map((_, index) => (
-          <span key={index} className="text-lg">
-            •
-          </span>
-        ))}
-      </div>
+      {/* Time Signature */}
+      <Text
+        x={barStartX + 15}
+        y={y - 20}
+        text={numerator.toString()}
+        fontSize={15}
+        align="center"
+        width={20}
+      />
+      <Text
+        x={barStartX + 15}
+        y={y}
+        text={denominator.toString()}
+        fontSize={15}
+        align="center"
+        width={20}
+      />
 
-      {/* End Bar Line */}
-      <span className="text-lg font-bold ml-3 -mr-9">|</span>
-    </div>
+      {/* Dots (based on numerator) */}
+      {Array.from({ length: numerator }).map((_, i) => {
+        const cx = barStartX + 60 + i * dotSpacing;
+        return <Circle key={i} x={cx} y={y} radius={4} fill="black" />;
+      })}
+
+      {/* Single Bar End | */}
+      <Line
+        points={[barEndX, y - lineHeight / 2, barEndX, y + lineHeight / 2]}
+        stroke="black"
+        strokeWidth={2}
+      />
+    </Group>
   );
 }

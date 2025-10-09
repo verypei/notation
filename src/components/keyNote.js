@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function KeyNoteSelector({ tonic, setTonic, stageScale = 1 }) {
   // Nada dasar umum (Do) — bisa diperluas sesuai kebutuhan
   const tonicOptions = [
@@ -35,7 +33,7 @@ export default function KeyNoteSelector({ tonic, setTonic, stageScale = 1 }) {
     >
       <label
         style={{
-          fontSize: `${14 * stageScale}px`,
+          fontSize: `${12 * stageScale}px`,
           fontWeight: "bold",
         }}
       >
@@ -46,7 +44,7 @@ export default function KeyNoteSelector({ tonic, setTonic, stageScale = 1 }) {
         value={tonic}
         onChange={handleChange}
         style={{
-          fontSize: `${16 * stageScale}px`,
+          fontSize: `${12 * stageScale}px`,
           padding: `${4 * stageScale}px ${8 * stageScale}px`,
           borderRadius: "4px",
           border: "1px solid #ccc",

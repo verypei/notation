@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
 export default function CanvasTimeSignature({
   numerator,
@@ -134,6 +134,7 @@ export default function CanvasTimeSignature({
           </span>
         )}
       </div>
+      {JSON.stringify({ numerator, denominator })}
     </div>
   );
 }
