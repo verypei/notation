@@ -1,31 +1,85 @@
-export default function CustomNotationBar({
-  numerator,
-  denominator,
-  repeat,
-  sameBefore,
-}) {
-  return (
-    <div className="flex items-center">
-      {/* Start Bar Line */}
-      {repeat ? (
-        <div className="flex flex-col items-center -mr-3 leading-[0.7]"></div>
-      ) : (
-        <div className="flex flex-col items-center mr-2 leading-[0.7]">
-          <span className="text-sm font-bold">{numerator}</span>
-          <span className="text-sm font-bold">{denominator}</span>
-        </div>
-      )}
-      {/* Custom Dots */}
-      <div className="flex mx-1 gap-4">
-        {Array.from({ length: numerator }).map((_, index) => (
-          <span key={index} className="text-lg">
-            •
-          </span>
-        ))}
-      </div>
+import { useEffect, useState } from "react";
+import { Group, Line, Text, Circle } from "react-konva";
 
-      {/* End Bar Line */}
-      <span className="text-lg font-bold ml-2 -mr-4">|</span>
-    </div>
+export default function CustomPrimaryBar({
+  x = 50,
+  y = 200,
+  numerator = 4,
+  denominator = 4,
+  spacing = 25,
+  marginRight = 50,
+}) {
+  const dotSpacing = 25;
+  const lineHeight = 20;
+  const barStartX = x;
+
+  const [barConfig, setBarConfig] = useState({
+    startX: x,
+    endX: x + numerator * spacing + marginRight,
+    dots: [],
+  });
+
+  useEffect(() => {
+    const startX = x;
+    const endX = x + numerator * spacing + marginRight;
+    const dots = Array.from({ length: numerator }).map((_, i) => ({
+      x: startX + 60 + i * spacing,
+      y: y,
+    }));
+    setBarConfig({ startX, endX, dots });
+  }, [numerator, denominator, x, y, spacing, marginRight]);
+
+  const barEndX = x + numerator * dotSpacing + 50;
+
+  return (
+    <Group x={0} y={0}>
+      {/* Double Bar Start || */}
+      <Line
+        points={[barStartX, y - lineHeight / 2, barStartX, y + lineHeight / 2]}
+        stroke="black"
+        strokeWidth={2}
+      />
+      <Line
+        points={[
+          barStartX + 6,
+          y - lineHeight / 2,
+          barStartX + 6,
+          y + lineHeight / 2,
+        ]}
+        stroke="black"
+        strokeWidth={2}
+      />
+
+      {/* Time Signature */}
+      <Text
+        x={barStartX + 15}
+        y={y - 17}
+        text={numerator.toString()}
+        fontSize={15}
+        align="center"
+        width={20}
+      />
+      <Text
+        x={barStartX + 15}
+        y={y}
+        text={denominator.toString()}
+        fontSize={15}
+        align="center"
+        width={20}
+      />
+
+      {/* Dots */}
+      {Array.from({ length: numerator }).map((_, i) => {
+        const cx = barStartX + 50 + i * dotSpacing;
+        return <Circle key={i} x={cx} y={y} radius={3} fill="black" />;
+      })}
+
+      {/* Single Bar End | */}
+      <Line
+        points={[barEndX, y - lineHeight / 2, barEndX, y + lineHeight / 2]}
+        stroke="black"
+        strokeWidth={2}
+      />
+    </Group>
   );
 }

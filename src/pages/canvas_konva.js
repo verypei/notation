@@ -1,5 +1,5 @@
 import { useRef, useEffect, useState } from "react";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer, Rect, Group, Text } from "react-konva";
 import CanvasTitle from "../components/title";
 import CanvasTimeSignature from "../components/timeSignature";
 import KeyNoteSelector from "../components/keyNote";
@@ -11,7 +11,6 @@ export default function A4Canvas({
   orientation = "portrait",
   fit = true,
 }) {
-  // State untuk judul, tanda birama, tempo, dan nada dasar----------------
   const [title, setTitle] = useState("");
   const [numerator, setNumerator] = useState("4");
   const [denominator, setDenominator] = useState("4");
@@ -33,6 +32,14 @@ export default function A4Canvas({
   const containerRef = useRef(null);
   const [stageScale, setStageScale] = useState(1);
   const [stageSize, setStageSize] = useState(paperPx);
+
+  const [barCount, setBarCount] = useState([
+    {
+      type: "primary",
+      numerator: parseInt(numerator),
+      denominator: parseInt(denominator),
+    },
+  ]); // 🔸 jumlah bar
 
   useEffect(() => {
     const w = mmToPx(A4_WIDTH_MM);
@@ -67,6 +74,15 @@ export default function A4Canvas({
     return () => window.removeEventListener("resize", onResize);
   }, [paperPx, fit]);
 
+  // 🟢 Tombol kontrol bar
+  const handleAddBar = () => {
+    setBarCount((prev) => prev + 1);
+  };
+
+  const handleRemoveBar = () => {
+    setBarCount((prev) => (prev > 1 ? prev - 1 : 1));
+  };
+
   const wrapperStyle = {
     position: "relative",
     width: "100%",
@@ -78,9 +94,13 @@ export default function A4Canvas({
     boxSizing: "border-box",
   };
 
+  const spacing = 25;
+  const barLength = parseInt(numerator) * spacing + 50;
+  const barStartX = 50;
+  const y = 200;
+
   return (
     <div ref={containerRef} style={wrapperStyle}>
-      {/* Title input overlay */}
       <CanvasTitle
         title={title}
         setTitle={setTitle}
@@ -102,7 +122,6 @@ export default function A4Canvas({
       />
       <TempoInput stageScale={stageScale} tempo={tempo} setTempo={setTempo} />
 
-      {/* Canvas paper */}
       <div
         style={{
           width: Math.round(stageSize.width * stageScale),
@@ -128,12 +147,56 @@ export default function A4Canvas({
               stroke="#d1d5db"
               strokeWidth={1.5}
             />
-            <PrimaryBar
-              x={50}
-              y={200}
-              numerator={numerator}
-              denominator={denominator}
-            />
+
+            {/* 🟡 Render semua bar berdasarkan barCount */}
+            {barCount.map((bar, i) => (
+              <PrimaryBar
+                key={i}
+                x={barStartX + i * barLength}
+                y={y}
+                numerator={bar.numerator}
+                denominator={bar.denominator}
+              />
+            ))}
+
+            {/* 🟢 Tombol + dan - */}
+            <Group x={barStartX + barCount.length * barLength + 10} y={y - 15}>
+              <Rect
+                width={13}
+                height={13}
+                fill="#4caf50"
+                cornerRadius={4}
+                onClick={handleAddBar}
+              />
+              <Text
+                text="+"
+                fontSize={10}
+                fill="white"
+                align="center"
+                width={13}
+                height={13}
+                verticalAlign="middle"
+              />
+            </Group>
+
+            <Group x={barStartX + barCount.length * barLength + 10} y={y + 2}>
+              <Rect
+                width={13}
+                height={13}
+                fill="#f44336"
+                cornerRadius={4}
+                onClick={handleRemoveBar}
+              />
+              <Text
+                text="-"
+                fontSize={18}
+                fill="white"
+                align="center"
+                width={13}
+                height={13}
+                verticalAlign="middle"
+              />
+            </Group>
           </Layer>
         </Stage>
       </div>

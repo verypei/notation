@@ -134,7 +134,6 @@ export default function CanvasTimeSignature({
           </span>
         )}
       </div>
-      {JSON.stringify({ numerator, denominator })}
     </div>
   );
 }

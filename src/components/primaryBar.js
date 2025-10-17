@@ -6,11 +6,11 @@ export default function PrimaryBar({
   y = 200,
   numerator = 4,
   denominator = 4,
-  spacing = 40,
+  spacing = 25,
   marginRight = 50,
 }) {
-  const dotSpacing = 40; // jarak antar titik
-  const lineHeight = 30; // tinggi bar
+  const dotSpacing = 25;
+  const lineHeight = 20;
   const barStartX = x;
 
   const [barConfig, setBarConfig] = useState({
@@ -19,19 +19,17 @@ export default function PrimaryBar({
     dots: [],
   });
 
-  const barEndX = x + numerator * dotSpacing + 50;
-
   useEffect(() => {
-    // Recalculate bar when numerator or denominator change
     const startX = x;
     const endX = x + numerator * spacing + marginRight;
     const dots = Array.from({ length: numerator }).map((_, i) => ({
       x: startX + 60 + i * spacing,
       y: y,
     }));
-
     setBarConfig({ startX, endX, dots });
   }, [numerator, denominator, x, y, spacing, marginRight]);
+
+  const barEndX = x + numerator * dotSpacing + 50;
 
   return (
     <Group x={0} y={0}>
@@ -55,7 +53,7 @@ export default function PrimaryBar({
       {/* Time Signature */}
       <Text
         x={barStartX + 15}
-        y={y - 20}
+        y={y - 17}
         text={numerator.toString()}
         fontSize={15}
         align="center"
@@ -70,10 +68,10 @@ export default function PrimaryBar({
         width={20}
       />
 
-      {/* Dots (based on numerator) */}
+      {/* Dots */}
       {Array.from({ length: numerator }).map((_, i) => {
-        const cx = barStartX + 60 + i * dotSpacing;
-        return <Circle key={i} x={cx} y={y} radius={4} fill="black" />;
+        const cx = barStartX + 50 + i * dotSpacing;
+        return <Circle key={i} x={cx} y={y} radius={3} fill="black" />;
       })}
 
       {/* Single Bar End | */}
